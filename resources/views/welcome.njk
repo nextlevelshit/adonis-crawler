@@ -1,0 +1,13 @@
+{% extends 'master' %}
+
+{% block content %}
+  <div class="__banner">
+    <div class="banner__inner">
+      <form class="" action="/crawl" method="post">
+        {{ csrfField }}
+        <input type="text" name="url" value="http://">
+        <input type="submit" name="submit" value="search">
+      </form>
+    </div>
+  </div>
+{% endblock %}
