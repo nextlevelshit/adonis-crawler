@@ -11,8 +11,6 @@
 |
 */
 
-require('./bootstrap/monitoring')
-
 const http = require('./bootstrap/http')
 http(function () {
   use('Event').fire('Http.start')
