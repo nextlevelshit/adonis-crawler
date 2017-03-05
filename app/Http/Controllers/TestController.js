@@ -1,33 +1,34 @@
 'use strict'
 
+const Crawler = require('crawler');
+const url = require('url');
+
 class TestController {
 
-  * index(request, response) {
-    //
-  }
+  * start(request, response) {
+    const url = request.input('url')
 
-  * create(request, response) {
-    //
-  }
+    var c = new Crawler({
+      maxConnections: 10,
+      // This will be called for each crawled page
+      callback: function (error, res, done) {
+        if (error) {
+          console.log(error)
+        } else {
+          var $ = res.$
+          // $ is Cheerio by default
+          //a lean implementation of core jQuery designed specifically for the server
+          console.log($('title').text())
+        }
+        done()
+      }
+    })
 
-  * store(request, response) {
-    //
-  }
+    c.queue(url)
 
-  * show(request, response) {
-    //
-  }
+    console.log(request.only('url'))
 
-  * edit(request, response) {
-    //
-  }
-
-  * update(request, response) {
-    //
-  }
-
-  * destroy(request, response) {
-    //
+    yield response.sendView('welcome', request.only('url'))
   }
 
 }

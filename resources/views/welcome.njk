@@ -3,11 +3,43 @@
 {% block content %}
   <div class="__banner">
     <div class="banner__inner">
-      <form class="" action="/crawl" method="post">
+      {# <form class="" action="/crawl" method="post"> #}
+      <form>
         {{ csrfField }}
-        <input type="text" name="url" value="http://">
+        <input type="text" name="url" value="{% if url %}{{ url }}{% else %}http://{% endif %}">
         <input type="submit" name="submit" value="search">
       </form>
+      {# </form> #}
     </div>
   </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="//unpkg.com/adonis-websocket-client/dist/ws.min.js"></script>
+  <script>
+    const channel = 'crawler'
+    const io = ws('')
+    // start connection to channel
+    const client = io.channel(channel).connect((error, response) => {
+      console.log((error)
+        ? error
+        : `Connected successfully to Socket`)
+    })
+
+    var Crawly = function (element) {
+      this.url = () => element.querySelector('input[type=text]')
+      this.submit = () => element.querySelector('input[type=submit]')
+
+      this.start = (event) => {
+        // preventing from submitting formular
+        event.preventDefault()
+        // starting crawling
+        client.emit('start', this.url().value)
+      }
+      // adding click listener
+      this.submit().addEventListener('click', this.start.bind(this), false)
+    }
+    // tracking send form event
+    new Crawly(document.querySelector('form'));
+  </script>
 {% endblock %}
