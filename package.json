@@ -5,9 +5,12 @@
   "scripts": {
     "start": "echo \"\\033[31mWARN: 'start' will be depreciated soon. Instead use 'npm run serve'\" && npm run serve",
     "dev": "echo \"\\033[31mWARN: 'dev' will be depreciated soon. Instead use 'npm run serve:dev'\" && npm run serve:dev",
-    "serve:dev": "nodemon --watch app --watch bootstrap --watch config --watch .env -x node server.js",
+    "serve:dev": "nodemon --watch app --watch resources --watch bootstrap --watch config --watch .env -x node server.js",
+    "serve:styles": "nodemon -e scss -x \"npm run styles\"",
+    "serve:all": "npm-run-all --parallel serve:styles serve:dev",
     "serve": "node server.js",
-    "lint": "standard"
+    "lint": "standard",
+    "styles": "node-sass --include-path scss resources/scss/master.scss public/style.css"
   },
   "author": "",
   "license": "MIT",
@@ -23,7 +26,6 @@
     "adonis-middleware": "^1.0.11",
     "adonis-websocket": "^1.0.3",
     "foundation-sites": "^6.3.1",
-    "look": "^0.1.3",
     "standard": "^8.6.0",
     "youch": "^2.0.4"
   },
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "debug": "^2.6.1",
+    "node-sass": "^4.5.0",
     "nodemon": "^1.11.0",
     "standard": "^8.6.0"
   }
