@@ -3,13 +3,11 @@
 {% block content %}
   <div class="__banner">
     <div class="banner__inner">
-      {# <form class="" action="/crawl" method="post"> #}
       <form>
         {{ csrfField }}
         <input type="text" name="url" value="{% if url %}{{ url }}{% else %}http://{% endif %}">
         <input type="submit" name="submit" value="search">
       </form>
-      {# </form> #}
     </div>
   </div>
 {% endblock %}
@@ -25,6 +23,9 @@
         ? error
         : `Connected successfully to Socket`)
     })
+    client.on('disable', (response) => {
+      c.disable(response)
+    })
 
     var Crawly = function (element) {
       this.url = () => element.querySelector('input[type=text]')
@@ -36,10 +37,15 @@
         // starting crawling
         client.emit('start', this.url().value)
       }
+
+      this.disable = (value) => {
+        this.url().disabled = value
+        this.submit().disabled = value
+      }
       // adding click listener
       this.submit().addEventListener('click', this.start.bind(this), false)
     }
     // tracking send form event
-    new Crawly(document.querySelector('form'));
+    const c = new Crawly(document.querySelector('form'))
   </script>
 {% endblock %}

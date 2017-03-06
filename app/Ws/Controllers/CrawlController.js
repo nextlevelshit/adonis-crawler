@@ -14,7 +14,8 @@ class CrawlController {
     socket.on('start', (url) => {
       this.url = url
 
-      console.log(`starting to crawl ${url}`)
+      // console.log(`starting to crawl ${url}`)
+      this.disable(true)
       this.crawler().queue(url)
     })
   }
@@ -25,10 +26,14 @@ class CrawlController {
       // This will be called for each crawled page
       callback: (error, res, done) => {
         error ? console.error(error) : this.findLinks(res.$)
-
+        this.disable(false)
         done()
       }
     })
+  }
+
+  disable(value) {
+    this.socket.toEveryone().emit('disable', value)
   }
 
   find($) {
@@ -36,9 +41,8 @@ class CrawlController {
   }
 
   findLinks($) {
-    // console.log($('a'))
     _.each($('a'), (link) => {
-      console.log(this.url + link.attribs.href)
+      console.log(link.attribs.href)
     })
   }
 }
