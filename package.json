@@ -1,5 +1,5 @@
 {
-  "name": "nls-adonis-crawler",
+  "name": "adonis-crawler",
   "version": "0.0.0",
   "main": "server.js",
   "scripts": {
