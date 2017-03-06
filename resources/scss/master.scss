@@ -95,6 +95,12 @@ body {
       &:nth-child(even) {
         background: rgba(0,0,0,0.1);
       }
+
+      span {
+        float: right;
+        margin-left: 10px;
+        opacity: 0.6;
+      }
     }
   }
 

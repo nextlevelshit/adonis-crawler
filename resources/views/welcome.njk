@@ -36,7 +36,6 @@
       c.results(response)
     })
     client.on('update', (response) => {
-      // console.log(response)
       c.addResult(response)
     })
 
@@ -64,10 +63,17 @@
           this.resultsEl().removeChild(child)
         }
       }
+      // add result to result list
       this.addResult = (item) => {
         // creating new element, which will be appended to result list
         var newEl = document.createElement('li')
-        newEl.appendChild(document.createTextNode(item))
+        newEl.appendChild(document.createTextNode(item.url))
+        // mark link as internal or external
+        if (item.internal === true) {
+          internalEl = document.createElement('span')
+          internalEl.appendChild(document.createTextNode('[internal]'))
+          newEl.appendChild(internalEl)
+        }
         // appending new child to result list
         this.resultsEl().appendChild(newEl)
         // scroll automatically to bottom
