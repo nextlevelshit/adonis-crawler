@@ -1,14 +1,12 @@
 @function tint($color, $percentage) {
    @return mix(white, $color, $percentage);
 }
-
 @function shade($color, $percentage) {
    @return mix(black, $color, $percentage);
 }
-
-$color-primary: #2E7A9E;//#316990;//#E56D70;//#316990; //#744d82;
+$color-primary: #2E7A9E; //#316990;//#E56D70;//#316990; //#744d82;
 $color-primary-tint: tint($color-primary, 12%);
-$color-primary-shade: shade($color-primary, 44%);//#9D4645;//shade($color-primary, 22%);
+$color-primary-shade: shade($color-primary, 44%); //#9D4645;//shade($color-primary, 22%);
 $color-white: #fff;
 $color-black: shade($color-primary, 78%);
 
@@ -30,7 +28,7 @@ body {
 
 .__banner {
   background: $color-primary;
-  background: radial-gradient(ellipse at top,  $color-primary-tint 12%, $color-primary 32%, $color-primary-shade 99%, $color-primary-shade 100%), url(https://www.toptal.com/designers/subtlepatterns/patterns/subtle_white_feathers.png);
+  background: radial-gradient(ellipse at top, $color-primary-tint 12%, $color-primary 32%, $color-primary-shade 99%, $color-primary-shade 100%), url("https://www.toptal.com/designers/subtlepatterns/patterns/subtle_white_feathers.png");
   background-blend-mode: multiply;
   min-height: 80vh;
   width: 100%;
@@ -90,7 +88,7 @@ body {
       display: block;
       text-align: left;
       padding: $this-padding;
-       font-weight: normal;
+      font-weight: normal;
 
       &:nth-child(even) {
         background: rgba(0,0,0,0.1);
@@ -102,7 +100,6 @@ body {
     display: flex;
     flex-flow: row nowrap;
     justify-content: strech;
-
   }
 
   button,
@@ -123,11 +120,23 @@ body {
   }
 
   button {
-    width: 100px;
+    width: 160px;
     margin-left: 10px;
     background: tint($color-primary, 70%);
     padding-left: 2rem;
     padding-right: 2rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 160ms;
+
+    &:hover {
+      background: tint($color-primary, 83%);
+      box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+    }
+
+    &:active {
+      box-shadow: 3px 3px 2px rgba(0,0,0,0.1), inset 2px 2px 3px rgba(0,0,0,0.1);
+    }
   }
 }
 
