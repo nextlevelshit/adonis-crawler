@@ -3,11 +3,13 @@
 {% block content %}
   <div class="__banner">
     <div class="banner__inner">
-      <form>
-        {{ csrfField }}
+      <div class="crawler">
         <input type="text" name="url" value="{% if url %}{{ url }}{% else %}http://{% endif %}">
         <input type="submit" name="submit" value="search">
-      </form>
+        <ul class="results">
+          <li>Bisher noch keine Suchergebnisse</li>
+        </ul>
+      </div>
     </div>
   </div>
 {% endblock %}
@@ -26,26 +28,48 @@
     client.on('disable', (response) => {
       c.disable(response)
     })
+    client.on('results', (response) => {
+      c.results(response)
+    })
 
     var Crawly = function (element) {
-      this.url = () => element.querySelector('input[type=text]')
-      this.submit = () => element.querySelector('input[type=submit]')
+      this.urlEl = () => element.querySelector('input[type=text]')
+      this.submitEl = () => element.querySelector('input[type=submit]')
+      this.resultsEl = () => element.querySelector('ul.results')
 
       this.start = (event) => {
         // preventing from submitting formular
         event.preventDefault()
         // starting crawling
-        client.emit('start', this.url().value)
+        client.emit('start', this.urlEl().value)
       }
-
+      // triggering if form elements are disabled while crawling and un-disabled
+      // after search results responded
       this.disable = (value) => {
-        this.url().disabled = value
-        this.submit().disabled = value
+        this.urlEl().disabled = value
+        this.submitEl().disabled = value
       }
-      // adding click listener
-      this.submit().addEventListener('click', this.start.bind(this), false)
+      // showing up crawl results from websocket
+      this.results = (list) => {
+        // removing old children from result list
+        while (child = this.resultsEl().firstChild) {
+          this.resultsEl().removeChild(child)
+        }
+        // adding results to result list
+        list.forEach((link) => {
+          // creating new element, which will be appended to result list
+          var newEl = document.createElement('li')
+          newEl.appendChild(document.createTextNode(link))
+
+          console.log(newEl)
+          // appending new child to result list
+          this.resultsEl().appendChild(newEl)
+        })
+      }
+      // adding click listener to form submit
+      this.submitEl().addEventListener('click', this.start.bind(this), false)
     }
     // tracking send form event
-    const c = new Crawly(document.querySelector('form'))
+    const c = new Crawly(document.querySelector('.crawler'))
   </script>
 {% endblock %}
