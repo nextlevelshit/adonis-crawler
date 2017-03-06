@@ -44,6 +44,8 @@
       this.start = (event) => {
         // preventing from submitting formular
         event.preventDefault()
+        // remove old results
+        this.clearResults()
         // starting crawling
         client.emit('start', this.urlEl().value)
       }
@@ -52,21 +54,24 @@
         this.urlEl().disabled = value
         this.submitEl().disabled = value
       }
-      // showing up crawl results from websocket
-      this.results = (list) => {
-        // removing old children from result list
+      // removing old children from result list
+      this.clearResults = () => {
         while (child = this.resultsEl().firstChild) {
           this.resultsEl().removeChild(child)
         }
+      }
+      this.addResult = (item) => {
+        // creating new element, which will be appended to result list
+        var newEl = document.createElement('li')
+        newEl.appendChild(document.createTextNode(item))
+        // appending new child to result list
+        this.resultsEl().appendChild(newEl)
+      }
+      // showing up crawl results from websocket
+      this.results = (list) => {
         // adding results to result list
         list.forEach((link) => {
-          // creating new element, which will be appended to result list
-          var newEl = document.createElement('li')
-          newEl.appendChild(document.createTextNode(link))
-
-          console.log(newEl)
-          // appending new child to result list
-          this.resultsEl().appendChild(newEl)
+          this.addResult(link)
         })
       }
       // adding click listener to form submit
