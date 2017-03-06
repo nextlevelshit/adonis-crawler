@@ -35,6 +35,10 @@
     client.on('results', (response) => {
       c.results(response)
     })
+    client.on('update', (response) => {
+      // console.log(response)
+      c.addResult(response)
+    })
 
     var Crawly = function (element) {
       this.urlEl = () => element.querySelector('input[type=text]')
@@ -66,6 +70,8 @@
         newEl.appendChild(document.createTextNode(item))
         // appending new child to result list
         this.resultsEl().appendChild(newEl)
+        // scroll automatically to bottom
+        this.resultsEl().scrollTop = this.resultsEl().scrollHeight - this.resultsEl().clientHeight
       }
       // showing up crawl results from websocket
       this.results = (list) => {

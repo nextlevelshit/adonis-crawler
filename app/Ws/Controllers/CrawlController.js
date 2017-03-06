@@ -10,6 +10,7 @@ class CrawlController {
     this.request = request
     this.maxConnections = 10
     this.url = null
+    this.links = []
 
     socket.on('start', (url) => {
       this.url = url
@@ -32,6 +33,10 @@ class CrawlController {
     })
   }
 
+  update(item) {
+    this.socket.toEveryone().emit('update', item)
+  }
+
   results(list) {
     console.log(`[sending results to front end]`)
     this.socket.toEveryone().emit('results', list)
@@ -45,19 +50,17 @@ class CrawlController {
     console.log($('title').text())
   }
 
+  normalize(link) {
+    return link
+  }
+
   findLinks($) {
-    var links = [];
-
-    console.log(`[Found links on ${this.url}]`)
-
     _.each($('a'), (link) => {
-      var href = link.attribs.href
-
-      console.log(href)
-
-      links.push(href)
+      if(link = this.normalize(link.attribs.href)) {
+        this.links.push(link)
+        this.update(link)
+      }
     })
-    this.results(links)
   }
 }
 

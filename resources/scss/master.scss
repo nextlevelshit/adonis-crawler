@@ -30,7 +30,7 @@ body {
   background: $color-primary;
   background: radial-gradient(ellipse at top, $color-primary-tint 12%, $color-primary 32%, $color-primary-shade 99%, $color-primary-shade 100%), url("https://www.toptal.com/designers/subtlepatterns/patterns/subtle_white_feathers.png");
   background-blend-mode: multiply;
-  min-height: 80vh;
+  height: 80vh;
   width: 100%;
   padding-bottom: 30px;
   justify-content: center;
@@ -83,6 +83,8 @@ body {
     margin: 30px 0;
     background: rgba(0,0,0,0.3);
     border-radius: 2px;
+    overflow-y: scroll;
+    height: 50vh;
 
     li {
       display: block;
