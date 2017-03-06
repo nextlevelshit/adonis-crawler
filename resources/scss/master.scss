@@ -1,3 +1,17 @@
+@function tint($color, $percentage) {
+   @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+   @return mix(black, $color, $percentage);
+}
+
+$color-primary: #2E7A9E;//#316990;//#E56D70;//#316990; //#744d82;
+$color-primary-tint: tint($color-primary, 12%);
+$color-primary-shade: shade($color-primary, 44%);//#9D4645;//shade($color-primary, 22%);
+$color-white: #fff;
+$color-black: shade($color-primary, 78%);
+
 body {
   font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-feature-settings: "kern", "liga", "pnum";
@@ -6,7 +20,7 @@ body {
   font-feature-settings: "kern", "liga", "pnum";
   -webkit-font-smoothing: antialiased;
   font-weight: lighter;
-  background: #ffffff;
+  background: $color-white;
 }
 
 * {
@@ -15,38 +29,34 @@ body {
 }
 
 .__banner {
-  background: #744d82;
-  background: -moz-radial-gradient(top, ellipse cover, #744d82 11%, #503d67 99%, #503d67 100%);
-  background: -webkit-gradient(radial, top center, 0, center center, 100%, color-stop(11%, #744d82), color-stop(99%, #503d67), color-stop(100%, #503d67));
-  background: -webkit-radial-gradient(top, ellipse cover, #744d82 11%, #503d67 99%, #503d67 100%);
-  background: -o-radial-gradient(top, ellipse cover, #744d82 11%, #503d67 99%, #503d67 100%);
-  background: -ms-radial-gradient(top, ellipse cover, #744d82 11%, #503d67 99%, #503d67 100%);
-  background: radial-gradient(ellipse at top, #744d82 11%, #503d67 99%, #503d67 100%);
-  height: 80vh;
+  background: $color-primary;
+  background: radial-gradient(ellipse at top,  $color-primary-tint 12%, $color-primary 32%, $color-primary-shade 99%, $color-primary-shade 100%), url(https://www.toptal.com/designers/subtlepatterns/patterns/subtle_white_feathers.png);
+  background-blend-mode: multiply;
+  min-height: 80vh;
   width: 100%;
   padding-bottom: 30px;
   justify-content: center;
   align-items: center;
   display: flex;
   text-align: center;
+  color: $color-white;
 }
 
 .banner__inner {
   h1 {
     font-weight: 500;
     font-size: 180px;
-    color: #ffffff;
+    color: $color-white;
   }
 
   h2 {
-    margin-bottom: 25px;
     text-align: center;
     letter-spacing: 3px;
     margin-top: 80px;
     font-weight: 400;
     text-transform: uppercase;
-    font-size: 16px;
-    color: #ffffff;
+    font-size: 42px;
+    color: $color-white;
 
     span {
       display: inline-block;
@@ -56,19 +66,74 @@ body {
 
   a,
   p {
-    color: #fff;
+    color: $color-white;
     font-size: 24px;
     font-weight: 300;
   }
 }
 
+.crawler {
+  $this-font-size: 1rem;
+  $this-padding: 0.5rem;
+  margin: 30px auto;
+  width: 980px;
+
+  ul {
+    display: block;
+    list-style-type: none;
+    padding: 0;
+    margin: 30px 0;
+    background: rgba(0,0,0,0.3);
+    border-radius: 2px;
+
+    li {
+      display: block;
+      text-align: left;
+      padding: $this-padding;
+       font-weight: normal;
+
+      &:nth-child(even) {
+        background: rgba(0,0,0,0.1);
+      }
+    }
+  }
+
+  form {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: strech;
+
+  }
+
+  button,
+  input {
+    height: $this-font-size + 2 * $this-padding;
+    box-sizing: content-box;
+    font-size: $this-font-size;
+    padding: $this-padding;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    color: $color-black;
+
+    &[type='text'] {
+      flex-grow: 1;
+      background: $color-white;
+      box-shadow: inset 3px 3px 5px rgba(0,0,0,0.2);
+    }
+  }
+
+  button {
+    width: 100px;
+    margin-left: 10px;
+    background: tint($color-primary, 70%);
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
 .__footer {
   text-align: center;
-  position: absolute;
-  bottom: 30px;
-  margin: auto;
-  right: 0;
-  left: 0;
+  margin: 30px auto;
 
   ul {
     display: table;

@@ -3,9 +3,13 @@
 {% block content %}
   <div class="__banner">
     <div class="banner__inner">
+      <h2>Adonis Crawler</h2>
+      <span>Visual Web Crawler based on AdonisJs</span>
       <div class="crawler">
-        <input type="text" name="url" value="{% if url %}{{ url }}{% else %}http://{% endif %}">
-        <input type="submit" name="submit" value="search">
+        <form>
+          <input type="text" name="url" value="{% if url %}{{ url }}{% else %}http://{% endif %}" autocomplete="off">
+          <button name="submit">&#x1f50e;</button>
+        </form>
         <ul class="results">
           <li>Bisher noch keine Suchergebnisse</li>
         </ul>
@@ -34,7 +38,7 @@
 
     var Crawly = function (element) {
       this.urlEl = () => element.querySelector('input[type=text]')
-      this.submitEl = () => element.querySelector('input[type=submit]')
+      this.submitEl = () => element.querySelector('button')
       this.resultsEl = () => element.querySelector('ul.results')
 
       this.start = (event) => {
@@ -43,8 +47,7 @@
         // starting crawling
         client.emit('start', this.urlEl().value)
       }
-      // triggering if form elements are disabled while crawling and un-disabled
-      // after search results responded
+      // triggering if form elements are disabled while crawling and un-disabled after search results responded
       this.disable = (value) => {
         this.urlEl().disabled = value
         this.submitEl().disabled = value
