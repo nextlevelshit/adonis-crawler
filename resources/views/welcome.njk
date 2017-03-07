@@ -8,7 +8,8 @@
       <div class="crawler">
         <form>
           <input type="text" name="url" value="{% if url %}{{ url }}{% else %}http://{% endif %}" autocomplete="off">
-          <button name="submit">Start Crawling</button>
+          <button class="submit">Start Crawling</button>
+          <button class="pause">Pause</button>
         </form>
         <ul class="results">
           <li>Bisher noch keine Suchergebnisse</li>
@@ -41,7 +42,8 @@
 
     var Crawly = function (element) {
       this.urlEl = () => element.querySelector('input[type=text]')
-      this.submitEl = () => element.querySelector('button')
+      this.submitEl = () => element.querySelector('button.submit')
+      this.pauseEl = () => element.querySelector('button.pause')
       this.resultsEl = () => element.querySelector('ul.results')
 
       this.start = (event) => {
@@ -51,6 +53,10 @@
         this.clearResults()
         // starting crawling
         client.emit('start', this.urlEl().value)
+      }
+      this.pause = (event) => {
+        event.preventDefault()
+        client.emit('pause')
       }
       // triggering if form elements are disabled while crawling and un-disabled after search results responded
       this.disable = (value) => {
@@ -86,8 +92,9 @@
           this.addResult(link)
         })
       }
-      // adding click listener to form submit
+      // adding click listener to form buttons
       this.submitEl().addEventListener('click', this.start.bind(this), false)
+      this.pauseEl().addEventListener('click', this.pause.bind(this), false)
     }
     // tracking send form event
     const c = new Crawly(document.querySelector('.crawler'))

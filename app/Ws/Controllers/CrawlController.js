@@ -6,6 +6,7 @@ const _ = require('lodash')
 const FOLLOW_INTERNAL_EXTERNAL_LINKS = false
 const SAVE_ANCHORS = false
 const DEFAULT_PROTOCOL = 'http://'
+const DEPTH_MAX = 10
 
 class CrawlController {
   constructor(socket, request) {
@@ -14,15 +15,50 @@ class CrawlController {
     this.request = request
     this.maxConnections = 10
     this.url = null
+    this.baseUrl = null
     this.links = []
+    this.linksCrawled = []
+    this.depth = 0
+    this.pause = false
 
     socket.on('start', (url) => {
-      this.url = url
+      var link = {
+        'url': url,
+        'internal': true,
+        'depth': this.depth
+      }
 
-      console.log(`[starting to crawl ${url}]`)
-      this.disable(true)
-      this.crawler().queue(url)
+      this.links = []
+      this.linksCrawled = []
+      this.url = url
+      this.baseUrl = url
+      this.links.push(link)
+
+      //   this.disable(true)
+      this.recursive(link)
     })
+
+    socket.on('pause', () => {
+      this.pause = !this.pause
+
+      if(!this.pause) this.continue()
+    })
+  }
+
+  continue() {
+    var toCrawl = _.difference(this.links, this.linksCrawled)
+
+    if (toCrawl) {
+      this.recursive(toCrawl[0])
+    }
+  }
+
+
+  recursive(link) {
+    if(this.pause) return
+
+    this.crawler().queue(link.url)
+    this.linksCrawled.push(link)
   }
 
   crawler() {
@@ -31,7 +67,8 @@ class CrawlController {
       // This will be called for each crawled page
       callback: (error, res, done) => {
         error ? console.error(error) : this.findLinks(res.$)
-        this.disable(false)
+        // this.disable(false)
+        this.continue()
         done()
       }
     })
@@ -42,7 +79,6 @@ class CrawlController {
   }
 
   results(list) {
-    console.log(`[sending results to front end]`)
     this.socket.toEveryone().emit('results', list)
   }
 
@@ -101,11 +137,18 @@ class CrawlController {
   }
 
   findLinks($) {
-    _.each($('a'), (anchor) => {
+    if(!$) return
 
+    _.each($('a'), (anchor) => {
       var link = this.normalize(anchor.attribs.href)
 
       if (link) {
+        console.log('checking if link exists', link.url)
+        if (_.includes(this.links, link)) {
+          console.log('--> already existing')
+          return
+        }
+
         this.links.push(link)
         this.update(link)
       }
